@@ -5,7 +5,6 @@ let supabase = null;
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_KEY;
 
-/**
 // PUBLIC_INTERFACE
 export function getSupabaseClient() {
   /**
@@ -17,13 +16,26 @@ export function getSupabaseClient() {
    *   import { createClient } from '@supabase/supabase-js';
    *   supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
    */
-  if (supabase) return supabase;
+  if (supabase) {
+    return supabase;
+  }
 
+  // If env vars are missing, warn once and operate in offline mode.
   if (!SUPABASE_URL || !SUPABASE_KEY) {
+    if (typeof console !== 'undefined') {
+      const missing = [
+        !SUPABASE_URL ? 'REACT_APP_SUPABASE_URL' : null,
+        !SUPABASE_KEY ? 'REACT_APP_SUPABASE_KEY' : null,
+      ].filter(Boolean).join(', ');
+      console.warn(
+        `[supabaseClient] Missing environment variables (${missing}). Running in offline/localStorage mode.`
+      );
+    }
     return null;
   }
 
-  // Placeholder for future integration if SDK is present; for now, null -> offline mode.
+  // SDK not installed in this template; return null to signal offline mode.
+  // To enable Supabase, add '@supabase/supabase-js' and initialize here.
   return null;
 }
 
